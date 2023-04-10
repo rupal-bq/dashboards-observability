@@ -64,6 +64,52 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
       },
     });
 
+    const appMountWithStartPage = (startPage?: string) => async (params: AppMountParameters) => {
+      const { Observability } = await import('./components/index');
+      const [coreStart, depsStart] = await core.getStartServices();
+      const pplService = new PPLService(coreStart.http);
+      const dslService = new DSLService(coreStart.http);
+      const savedObjects = new SavedObjects(coreStart.http);
+      const timestampUtils = new TimestampUtils(dslService);
+      const qm = new QueryManager();
+
+      return Observability(
+        coreStart,
+        depsStart as AppPluginStartDependencies,
+        params,
+        pplService,
+        dslService,
+        savedObjects,
+        timestampUtils,
+        qm,
+        startPage
+      );
+    };
+
+    core.application.register({
+      id: observabilityApplicationsID,
+      title: observabilityApplicationsTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityApplicationsPluginOrder,
+      mount: appMountWithStartPage('/application_analytics'),
+    });
+
+    core.application.register({
+      id: observabilityEventsID,
+      title: observabilityEventsTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityEventsPluginOrder,
+      mount: appMountWithStartPage('/event_analytics'),
+    });
+
+    core.application.register({
+      id: observabilityID,
+      title: observabilityTitle,
+      category: DEFAULT_APP_CATEGORIES.plugins,
+      order: observabilityPluginOrder,
+      mount: appMountWithStartPage(),
+    });
+
     // Return methods that should be available to other plugins
     return {};
   }
