@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { observabilityID } from "../../../../../common/constants/shared";
+import { observabilityApplicationsID } from '../../../../common/constants/shared';
 
-export const convertLegacyNotebooksUrl = (location: Location)=> {
-  const pathname = location.pathname.replace('notebooks-dashboards', observabilityID);
+export const convertLegacyAppAnalyticsUrl = (location: Location) => {
+  const pathname = location.pathname.replace('application_analytics', observabilityApplicationsID);
   const hash = `#/notebooks${location.hash.replace(/^#/, '')}${
     location.hash.includes('?') ? location.search.replace(/^\?/, '&') : location.search
   }`;
