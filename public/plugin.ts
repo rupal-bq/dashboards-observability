@@ -23,14 +23,17 @@ import {
   observabilityEventsPluginOrder,
   observabilityEventsTitle,
   observabilityID,
+  observabilityTracesTitle,
+  observabilityMetricsID,
+  observabilityMetricsPluginOrder,
+  observabilityMetricsTitle,
   observabilityNotebookID,
   observabilityNotebookPluginOrder,
   observabilityNotebookTitle,
-  observabilityPanelsID,
-  observabilityPanelsPluginOrder,
-  observabilityPanelsTitle,
   observabilityPluginOrder,
   observabilityTitle,
+  observabilityTracesID,
+  observabilityTracesPluginOrder,
 } from '../common/constants/shared';
 import PPLService from './services/requests/ppl';
 import DSLService from './services/requests/dsl';
@@ -92,19 +95,27 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     });
 
     core.application.register({
+      id: observabilityMetricsID,
+      title: observabilityMetricsTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityMetricsPluginOrder,
+      mount: appMountWithStartPage('/metrics_analytics'),
+    });
+
+    core.application.register({
+      id: observabilityTracesID,
+      title: observabilityTracesTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityTracesPluginOrder,
+      mount: appMountWithStartPage('/trace_analytics'),
+    });
+
+    core.application.register({
       id: observabilityNotebookID,
       title: observabilityNotebookTitle,
       category: DEFAULT_APP_CATEGORIES.observability,
       order: observabilityNotebookPluginOrder,
       mount: appMountWithStartPage('/notebooks'),
-    });
-
-    core.application.register({
-      id: observabilityPanelsID,
-      title: observabilityPanelsTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
-      order: observabilityPanelsPluginOrder,
-      mount: appMountWithStartPage('/operational_panels'),
     });
 
     core.application.register({
