@@ -22,7 +22,7 @@ interface ObservabilityAppDeps {
   savedObjects: any;
   timestampUtils: any;
   queryManager: QueryManager;
-  startPage?: String;
+  startPage?: string;
 }
 
 // for cypress to test redux store
@@ -46,11 +46,6 @@ export const App = ({
     href: `${observabilityID}#/`,
   };
 
-  const customPanelBreadcrumb = {
-    text: 'Operational panels',
-    href: '#/operational_panels/',
-  };
-
   return (
     <Provider store={store}>
       <HashRouter>
@@ -63,7 +58,7 @@ export const App = ({
           timestampUtils={timestampUtils}
           queryManager={queryManager}
           startPage={startPage}
-        ></AppRoutesWrapper>{' '}
+        />{' '}
       </HashRouter>
     </Provider>
   );

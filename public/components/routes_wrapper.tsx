@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 import { Home as ApplicationAnalyticsHome } from './application_analytics/home';
 import { Main as NotebooksHome } from './notebooks/components/main';
 import { Home as CustomPanelsHome } from './custom_panels/home';
+import { Home as MetricsHome } from './metrics';
 import { Home as TraceAnalyticsHome } from './trace_analytics/home';
 import { EventAnalytics } from './event_analytics';
 import { ObservabilityAppDeps } from './app';
@@ -33,6 +34,11 @@ export const AppRoutesWrapper = ({
   const customPanelBreadcrumb = {
     text: 'Operational panels',
     href: '#/operational_panels/',
+  };
+
+  const MetricsBreadcrumb = {
+    text: 'Metrics',
+    href: '#/metrics_analytics/',
   };
 
   const history = useHistory();
@@ -92,6 +98,22 @@ export const AppRoutesWrapper = ({
                   pplService={pplService}
                   dslService={dslService}
                   renderProps={props}
+                />
+              );
+            }}
+          />
+          <Route
+            path="/metrics_analytics"
+            render={(props) => {
+              chrome.setBreadcrumbs([parentBreadcrumb, MetricsBreadcrumb]);
+              return (
+                <MetricsHome
+                  http={http}
+                  chrome={chrome}
+                  parentBreadcrumb={parentBreadcrumb}
+                  renderProps={props}
+                  pplService={pplService}
+                  savedObjects={savedObjects}
                 />
               );
             }}
