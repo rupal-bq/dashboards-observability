@@ -23,6 +23,12 @@ import {
   observabilityEventsPluginOrder,
   observabilityEventsTitle,
   observabilityID,
+  observabilityNotebookID,
+  observabilityNotebookPluginOrder,
+  observabilityNotebookTitle,
+  observabilityPanelsID,
+  observabilityPanelsPluginOrder,
+  observabilityPanelsTitle,
   observabilityPluginOrder,
   observabilityTitle,
 } from '../common/constants/shared';
@@ -48,7 +54,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
       const pplService = new PPLService(coreStart.http);
       const dslService = new DSLService(coreStart.http);
       const savedObjects = new SavedObjects(coreStart.http);
-      const timestampUtils = new TimestampUtils(dslService);
+      const timestampUtils = new TimestampUtils(dslService, pplService);
       const qm = new QueryManager();
 
       return Observability(
@@ -75,6 +81,30 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
       category: DEFAULT_APP_CATEGORIES.observability,
       order: observabilityApplicationsPluginOrder,
       mount: appMountWithStartPage('/application_analytics'),
+    });
+
+    core.application.register({
+      id: observabilityEventsID,
+      title: observabilityEventsTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityEventsPluginOrder,
+      mount: appMountWithStartPage('/event_analytics'),
+    });
+
+    core.application.register({
+      id: observabilityNotebookID,
+      title: observabilityNotebookTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityNotebookPluginOrder,
+      mount: appMountWithStartPage('/notebooks'),
+    });
+
+    core.application.register({
+      id: observabilityPanelsID,
+      title: observabilityPanelsTitle,
+      category: DEFAULT_APP_CATEGORIES.observability,
+      order: observabilityPanelsPluginOrder,
+      mount: appMountWithStartPage('/operational_panels'),
     });
 
     core.application.register({
