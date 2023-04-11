@@ -7,7 +7,9 @@ import './index.scss';
 
 import { concat, from } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { i18n } from '@osd/i18n';
 import {
+  AppCategory,
   AppMountParameters,
   CoreSetup,
   CoreStart,
@@ -45,6 +47,16 @@ import { uiSettingsService } from '../common/utils';
 import { QueryManager } from '../common/query_manager';
 import { DashboardSetup } from '../../../src/plugins/dashboard/public';
 
+export const OBSERVABILITY_APP_CATEGORIES: Record<string, AppCategory> = Object.freeze({
+  observability: {
+    id: 'observability',
+    label: i18n.translate('core.ui.observabilityNavList.label', {
+      defaultMessage: 'Observability',
+    }),
+    order: 3000,
+  },
+});
+
 export class ObservabilityPlugin implements Plugin<ObservabilitySetup, ObservabilityStart> {
   constructor(private initializerContext: PluginInitializerContext) {}
 
@@ -81,7 +93,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     core.application.register({
       id: observabilityApplicationsID,
       title: observabilityApplicationsTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
       order: observabilityApplicationsPluginOrder,
       mount: appMountWithStartPage('/application_analytics'),
     });
@@ -89,7 +101,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     core.application.register({
       id: observabilityEventsID,
       title: observabilityEventsTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
       order: observabilityEventsPluginOrder,
       mount: appMountWithStartPage('/event_analytics'),
     });
@@ -97,7 +109,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     core.application.register({
       id: observabilityMetricsID,
       title: observabilityMetricsTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
       order: observabilityMetricsPluginOrder,
       mount: appMountWithStartPage('/metrics_analytics'),
     });
@@ -105,7 +117,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     core.application.register({
       id: observabilityTracesID,
       title: observabilityTracesTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
       order: observabilityTracesPluginOrder,
       mount: appMountWithStartPage('/trace_analytics'),
     });
@@ -113,7 +125,7 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     core.application.register({
       id: observabilityNotebookID,
       title: observabilityNotebookTitle,
-      category: DEFAULT_APP_CATEGORIES.observability,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
       order: observabilityNotebookPluginOrder,
       mount: appMountWithStartPage('/notebooks'),
     });
