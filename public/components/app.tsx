@@ -46,6 +46,11 @@ export const App = ({
     href: `${observabilityID}#/`,
   };
 
+  const customPanelBreadcrumb = {
+    text: 'Operational panels',
+    href: '#/operational_panels/',
+  };
+
   return (
     <Provider store={store}>
       <HashRouter>
