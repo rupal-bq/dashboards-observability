@@ -32,6 +32,7 @@ import {
 import React, { ReactElement, useEffect, useState } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
+import { useHistory, useLocation } from 'react-router-dom';
 import { ChromeBreadcrumb } from '../../../../../src/core/public';
 import {
   CREATE_PANEL_MESSAGE,
@@ -43,7 +44,6 @@ import { CustomPanelListType } from '../../../common/types/custom_panels';
 import { getSampleDataModal } from '../common/helpers/add_sample_modal';
 import { pageStyles } from '../../../common/constants/shared';
 import { DeleteModal } from '../common/helpers/delete_modal';
-import { useHistory, useLocation } from 'react-router-dom';
 
 /*
  * "CustomPanelTable" module, used to view all the saved panels
@@ -99,8 +99,8 @@ export const CustomPanelTable = ({
   }, []);
 
   useEffect(() => {
-    const url = window.location.hash.split('/')
-    if (url[url.length-1] === 'create') { 
+    const url = window.location.hash.split('/');
+    if (url[url.length - 1] === 'create') {
       createPanel();
     }
   }, [location]);
@@ -142,7 +142,7 @@ export const CustomPanelTable = ({
       getCustomModal(
         onCreate,
         () => {
-          closeModal()
+          closeModal();
           history.goBack();
         },
         'Name',
@@ -301,7 +301,7 @@ export const CustomPanelTable = ({
           <EuiPageHeader>
             <EuiPageHeaderSection>
               <EuiTitle size="l">
-                <h1>Operational panels</h1>
+                <h1>Observability Dashboards</h1>
               </EuiTitle>
             </EuiPageHeaderSection>
           </EuiPageHeader>
@@ -338,7 +338,7 @@ export const CustomPanelTable = ({
                   <EuiFlexItem>
                     <EuiButton
                       fill
-                      href="#/operational_panels/create"                      
+                      href="#/operational_panels/create"
                       data-test-subj="customPanels__createNewPanels"
                     >
                       Create panel
