@@ -46,6 +46,10 @@ export const observabilityNotebookID = 'observability-notebooks';
 export const observabilityNotebookTitle = 'Notebooks';
 export const observabilityNotebookPluginOrder = 5094;
 
+export const observabilityPanelsID = 'observability-panels';
+export const observabilityPanelsTitle = 'Dashboards';
+export const observabilityPanelsPluginOrder = 5095;
+
 // Shared Constants
 export const SQL_DOCUMENTATION_URL = 'https://opensearch.org/docs/latest/search-plugins/sql/index/';
 export const PPL_DOCUMENTATION_URL =

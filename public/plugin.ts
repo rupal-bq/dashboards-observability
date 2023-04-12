@@ -36,6 +36,9 @@ import {
   observabilityTitle,
   observabilityTracesID,
   observabilityTracesPluginOrder,
+  observabilityPanelsID,
+  observabilityPanelsTitle,
+  observabilityPanelsPluginOrder,
 } from '../common/constants/shared';
 import PPLService from './services/requests/ppl';
 import DSLService from './services/requests/dsl';
@@ -131,9 +134,17 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     });
 
     core.application.register({
+      id: observabilityPanelsID,
+      title: observabilityPanelsTitle,
+      category: OBSERVABILITY_APP_CATEGORIES.observability,
+      order: observabilityPanelsPluginOrder,
+      mount: appMountWithStartPage('/operational_panels'),
+    });
+
+    core.application.register({
       id: observabilityID,
       title: observabilityTitle,
-      category: DEFAULT_APP_CATEGORIES.plugins,
+      category: OBSERVABILITY_APP_CATEGORIES.plugins,
       order: observabilityPluginOrder,
       mount: appMountWithStartPage(),
     });

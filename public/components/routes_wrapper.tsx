@@ -32,7 +32,7 @@ export const AppRoutesWrapper = ({
   };
 
   const customPanelBreadcrumb = {
-    text: 'Operational panels',
+    text: 'Dashboards',
     href: '#/operational_panels/',
   };
 

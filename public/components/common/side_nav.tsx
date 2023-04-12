@@ -32,7 +32,7 @@ export function ObservabilitySideBar(props: { children: React.ReactNode }) {
     // Default page is Events Analytics
     // But it is kept as second option in side nav
     if (hash === '#/') {
-      items[0].items[2].isSelected = true;
+      items[0].isSelected = true;
       return true;
     }
     for (let i = 0; i < items.length; i++) {
@@ -48,25 +48,19 @@ export function ObservabilitySideBar(props: { children: React.ReactNode }) {
 
   const items = [
     {
-      name: 'Observability',
+      name: 'Trace analytics',
       id: 0,
+      href: '#/trace_analytics/home',
       items: [
         {
-          name: 'Trace analytics',
+          name: 'Traces',
           id: 1,
-          href: '#/trace_analytics/home',
-          items: [
-            {
-              name: 'Traces',
-              id: 1.1,
-              href: '#/trace_analytics/traces',
-            },
-            {
-              name: 'Services',
-              id: 1.2,
-              href: '#/trace_analytics/services',
-            },
-          ],
+          href: '#/trace_analytics/traces',
+        },
+        {
+          name: 'Services',
+          id: 2,
+          href: '#/trace_analytics/services',
         },
       ],
     },
