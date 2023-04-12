@@ -141,14 +141,6 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
       mount: appMountWithStartPage('/operational_panels'),
     });
 
-    core.application.register({
-      id: observabilityID,
-      title: observabilityTitle,
-      category: OBSERVABILITY_APP_CATEGORIES.plugins,
-      order: observabilityPluginOrder,
-      mount: appMountWithStartPage(),
-    });
-
     // Return methods that should be available to other plugins
     return {};
   }
