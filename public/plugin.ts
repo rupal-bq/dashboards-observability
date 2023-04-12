@@ -21,10 +21,6 @@ import {
   observabilityApplicationsID,
   observabilityApplicationsPluginOrder,
   observabilityApplicationsTitle,
-  observabilityEventsID,
-  observabilityEventsPluginOrder,
-  observabilityEventsTitle,
-  observabilityID,
   observabilityTracesTitle,
   observabilityMetricsID,
   observabilityMetricsPluginOrder,
@@ -32,13 +28,14 @@ import {
   observabilityNotebookID,
   observabilityNotebookPluginOrder,
   observabilityNotebookTitle,
-  observabilityPluginOrder,
-  observabilityTitle,
   observabilityTracesID,
   observabilityTracesPluginOrder,
   observabilityPanelsID,
   observabilityPanelsTitle,
   observabilityPanelsPluginOrder,
+  observabilityLogsID,
+  observabilityLogsTitle,
+  observabilityLogsPluginOrder,
 } from '../common/constants/shared';
 import PPLService from './services/requests/ppl';
 import DSLService from './services/requests/dsl';
@@ -102,10 +99,10 @@ export class ObservabilityPlugin implements Plugin<ObservabilitySetup, Observabi
     });
 
     core.application.register({
-      id: observabilityEventsID,
-      title: observabilityEventsTitle,
+      id: observabilityLogsID,
+      title: observabilityLogsTitle,
       category: OBSERVABILITY_APP_CATEGORIES.observability,
-      order: observabilityEventsPluginOrder,
+      order: observabilityLogsPluginOrder,
       mount: appMountWithStartPage('/event_analytics'),
     });
 
