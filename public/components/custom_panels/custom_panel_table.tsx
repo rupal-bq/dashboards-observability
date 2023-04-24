@@ -51,6 +51,7 @@ import {
   clonePanel,
   createPanel,
   deletePanels,
+  doesNameExist,
   fetchPanels,
   isUuid,
   newPanelTemplate,
@@ -132,8 +133,14 @@ export const CustomPanelTable = ({
   };
 
   const onRename = async (newCustomPanelName: string) => {
-    dispatch(renameCustomPanel(newCustomPanelName, selectedCustomPanels[0].id));
-    closeModal();
+    const check = await doesNameExist(newCustomPanelName);
+    if (await check()) {
+      console.log('Observability Dashboard name already exists');
+      return;
+    } else {
+      dispatch(renameCustomPanel(newCustomPanelName, selectedCustomPanels[0].id));
+      closeModal();
+    }
   };
 
   const onClone = async (newName: string) => {
