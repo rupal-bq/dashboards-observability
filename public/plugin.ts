@@ -75,10 +75,11 @@ import {
   ObservabilityStart,
   SetupDependencies,
 } from './types';
+import { ObservabilityAppServices } from '../common/types/shared';
 
 export class ObservabilityPlugin
   implements
-    Plugin<ObservabilitySetup, ObservabilityStart, SetupDependencies, AppPluginStartDependencies> {
+  Plugin<ObservabilitySetup, ObservabilityStart, SetupDependencies, AppPluginStartDependencies> {
   public setup(
     core: CoreSetup<AppPluginStartDependencies>,
     setupDeps: SetupDependencies
@@ -137,6 +138,10 @@ export class ObservabilityPlugin
       const savedObjects = new SavedObjects(coreStart.http);
       const timestampUtils = new TimestampUtils(dslService, pplService);
 
+      const services: ObservabilityAppServices = {
+        toasts: coreStart.notifications.toasts,
+      };
+
       return Observability(
         coreStart,
         depsStart as AppPluginStartDependencies,
@@ -146,6 +151,7 @@ export class ObservabilityPlugin
         savedObjects,
         timestampUtils,
         qm,
+        services,
         startPage
       );
     };

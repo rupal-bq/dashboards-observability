@@ -48,7 +48,6 @@ import { getSampleDataModal } from '../common/helpers/add_sample_modal';
 import { pageStyles } from '../../../common/constants/shared';
 import { DeleteModal } from '../common/helpers/delete_modal';
 import {
-  clonePanel,
   createPanel,
   deletePanels,
   doesNameExist,
@@ -58,6 +57,8 @@ import {
   renameCustomPanel,
   selectPanelList,
 } from './redux/panel_slice';
+import { isNameValid } from './helpers/utils';
+import { useToast } from '../common/toast';
 
 /*
  * "CustomPanelTable" module, used to view all the saved panels
@@ -78,8 +79,6 @@ interface Props {
   loading: boolean;
   setBreadcrumbs: (newBreadcrumbs: ChromeBreadcrumb[]) => void;
   parentBreadcrumbs: EuiBreadcrumb[];
-  cloneCustomPanel: (newCustomPanelName: string, customPanelId: string) => void;
-  deleteCustomPanelList: (customPanelIdList: string[], toastMessage: string) => any;
   addSamplePanels: () => void;
 }
 
@@ -87,29 +86,24 @@ export const CustomPanelTable = ({
   loading,
   setBreadcrumbs,
   parentBreadcrumbs,
-  cloneCustomPanel,
-  deleteCustomPanelList,
   addSamplePanels,
 }: Props) => {
   const customPanels = useSelector<CustomPanelType[]>(selectPanelList);
   const [isModalVisible, setIsModalVisible] = useState(false); // Modal Toggle
   const [modalLayout, setModalLayout] = useState(<EuiOverlayMask />); // Modal Layout
   const [isActionsPopoverOpen, setIsActionsPopoverOpen] = useState(false);
-  const [selectedCustomPanels, setselectedCustomPanels] = useState<CustomPanelType[]>([]);
+  const [selectedCustomPanels, setselectedCustomPanels$] = useState<CustomPanelType[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const history = useHistory();
 
   const dispatch = useDispatch();
+  const { setToast } = useToast();
 
   useEffect(() => {
     setBreadcrumbs(parentBreadcrumbs);
     dispatch(fetchPanels());
   }, []);
-
-  // useEffect(() =>
-  //   console.log({ customPanels, selectedCustomPanels }, [customPanels, selectedCustomPanels])
-  // );
 
   useEffect(() => {
     const url = window.location.hash.split('/');
@@ -127,8 +121,12 @@ export const CustomPanelTable = ({
   };
 
   const onCreate = async (newCustomPanelName: string) => {
-    const newPanel = newPanelTemplate(newCustomPanelName);
-    dispatch(createPanel(newPanel));
+    if (!isNameValid(newCustomPanelName)) {
+      setToast('Invalid Dashboard name', 'danger');
+    } else {
+      const newPanel = newPanelTemplate(newCustomPanelName);
+      dispatch(createPanel(newPanel));
+    }
     closeModal();
   };
 
@@ -144,41 +142,51 @@ export const CustomPanelTable = ({
   };
 
   const onClone = async (newName: string) => {
-    let sourcePanel = selectedCustomPanels[0];
-    try {
-      if (!isUuid(sourcePanel.id)) {
-        // Observability Panel API returns partial record, so for duplication
-        // we will retrieve the entire record and allow new process to continue.
-        const legacyFetchResult = await coreRefs.http!.get(
-          `${CUSTOM_PANELS_API_PREFIX}/panels/${sourcePanel.id}`
+    if (!isNameValid(newName)) {
+      setToast('Invalid Operational Panel name', 'danger');
+    } else {
+      let sourcePanel = selectedCustomPanels[0];
+      try {
+        if (!isUuid(sourcePanel.id)) {
+          // Observability Panel API returns partial record, so for duplication
+          // we will retrieve the entire record and allow new process to continue.
+          const legacyFetchResult = await coreRefs.http!.get(
+            `${CUSTOM_PANELS_API_PREFIX}/panels/${sourcePanel.id}`
+          );
+          sourcePanel = legacyFetchResult.operationalPanel;
+        }
+
+        const { id, ...newPanel } = {
+          ...sourcePanel,
+          title: newName,
+        };
+
+        await dispatch(createPanel(newPanel));
+
+        setToast(`Observability Dashboard "${newName}" successfully created!`);
+      } catch (err) {
+        setToast(
+          'Error cloning Operational Panel, please make sure you have the correct permission.',
+          'danger'
         );
-        sourcePanel = legacyFetchResult.operationalPanel;
+        console.log(err);
       }
-
-      const { id, ...newPanel } = {
-        ...sourcePanel,
-        title: newName,
-      };
-
-      dispatch(createPanel(newPanel));
-    } catch (err) {
-      console.log(err);
     }
     closeModal();
   };
 
   const onDelete = async () => {
-    const toastMessage = `Observability Dashboards ${
-      selectedCustomPanels.length > 1 ? 's' : ' ' + selectedCustomPanels[0].title
-    } successfully deleted!`;
+    const toastMessage = `Observability Dashboards ${selectedCustomPanels.length > 1 ? 's' : ' ' + selectedCustomPanels[0].title
+      } successfully deleted!`;
 
     try {
-      dispatch(deletePanels(selectedCustomPanels));
+      await dispatch(deletePanels(selectedCustomPanels));
+      setToast(toastMessage);
     } catch (err) {
-      // setToast(
-      //   'Error deleting Operational Panels, please make sure you have the correct permission.',
-      //   'danger'
-      // );
+      setToast(
+        'Error deleting Operational Panels, please make sure you have the correct permission.',
+        'danger'
+      );
       console.error(err.body?.message || err);
     }
 
@@ -229,7 +237,7 @@ export const CustomPanelTable = ({
         'Duplicate Dashboard',
         'Cancel',
         'Duplicate',
-        selectedCustomPanels[0].title + ' (copy)',
+        selectedCustomPanels[0].title + ' (copy)x',
         CREATE_PANEL_MESSAGE
       )
     );
@@ -237,9 +245,8 @@ export const CustomPanelTable = ({
   };
 
   const deletePanel = () => {
-    const customPanelString = `Observability Dashboard${
-      selectedCustomPanels.length > 1 ? 's' : ''
-    }`;
+    const customPanelString = `Observability Dashboard${selectedCustomPanels.length > 1 ? 's' : ''
+      }`;
     setModalLayout(
       <DeleteModal
         onConfirm={onDelete}
@@ -410,8 +417,8 @@ export const CustomPanelTable = ({
                   items={
                     searchQuery
                       ? customPanels.filter((customPanel) =>
-                          customPanel.title.toLowerCase().includes(searchQuery.toLowerCase())
-                        )
+                        customPanel.title.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
                       : customPanels
                   }
                   itemId="id"
