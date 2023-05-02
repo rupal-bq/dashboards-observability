@@ -121,8 +121,7 @@ export const CustomPanelTable = ({
   };
 
   const onCreate = async (newCustomPanelName: string) => {
-    const nameFlag = await doesNameExist(newCustomPanelName);
-    if (await nameFlag()) {
+    if (await doesNameExist(newCustomPanelName)) {
       setToast(`Observability Dashboard with name "${newCustomPanelName}" already exists`, 'danger');
     } else if (!isNameValid(newCustomPanelName)) {
       setToast('Invalid Dashboard name', 'danger');
@@ -134,8 +133,7 @@ export const CustomPanelTable = ({
   };
 
   const onRename = async (newCustomPanelName: string) => {
-    const nameFlag = await doesNameExist(newCustomPanelName);
-    if (await nameFlag()) {
+    if (await doesNameExist(newCustomPanelName)) {
       setToast(`Observability Dashboard with name "${newCustomPanelName}" already exists`, 'danger');
     } else if (!isNameValid(newCustomPanelName)) {
       setToast('Invalid Dashboard name', 'danger');
@@ -146,8 +144,7 @@ export const CustomPanelTable = ({
   };
 
   const onClone = async (newName: string) => {
-    const nameFlag = await doesNameExist(newName);
-    if (await nameFlag()) {
+    if (await doesNameExist(newName)) {
       setToast(`Observability Dashboard with name "${newName}" already exists`, 'danger');
     } else if (!isNameValid(newName)) {
       setToast('Invalid Operational Panel name', 'danger');
